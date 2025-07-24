@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carta para mi patito</title>
+  <link rel="icon" href="https://pm1.aminoapps.com/8200/1b01267b78be98f6932dab3bc521c97a448b845br1-507-381v2_hq.jpg"/>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: black;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      transform: rotate(45deg);
+      animation: floatUp 10s linear infinite;
+      opacity: 0.6;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      border-radius: 50%;
+    }
+
+    .heart::before { top: -10px; left: 0; }
+    .heart::after { top: 0; left: -10px; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(45deg); opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-20vh) rotate(45deg); opacity: 0; }
+    }
+
+    .envelope {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(235, 115, 153, 0.7), 0 0 40px rgba(255, 100, 150, 0.4);
+      overflow: hidden;
+      z-index: 2;
+      animation: glow 2s infinite alternate;
+      transition: transform 1s ease, opacity 1s ease;
+      background-image: url('https://i.imgur.com/X8BqohY.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .envelope.opened { transform: rotateX(90deg); opacity: 0; }
+
+    .character-img {
+      position: absolute;
+      width: 90%;
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      border-radius: 15px;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .heart-button {
+      background-color: #ff4d6d;
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+      transition: transform 0.3s, opacity 0.5s ease;
+      margin-top: 20px;
+      z-index: 5;
+    }
+
+    .heart-button:hover { transform: scale(1.1); }
+
+    .message-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease;
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .message-container.active { opacity: 1; visibility: visible; }
+
+    .message-box {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 500px;
+      max-height: 80%;
+      overflow-y: auto;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .mini-message {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #ff7aa2;
+    }
+
+    .full-message {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .close-button {
+      background-color: #ff4d6d;
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
+
+    .close-button:hover { background-color: #e43e5f; }
+
+    /* Mini video en la esquina */
+    #videoContainer {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      height: 170px;
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Mensaje mágico al cerrar */
+    #finalMessage {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      color: #ffb3d9;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #ff99cc;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      z-index: 2000;
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      pointer-events: none;
+    }
+
+    #finalMessage.active {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Corazones flotantes -->
+  <div class="heart" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="heart" style="left: 30%; animation-delay: 5s;"></div>
+  <div class="heart" style="left: 50%; animation-delay: 8s;"></div>
+  <div class="heart" style="left: 70%; animation-delay: 4s;"></div>
+  <div class="heart" style="left: 90%; animation-delay: 5s;"></div>
+
+  <!-- Sobre -->
+  <div class="envelope" id="envelope">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuvEpR8gF8pUEtLl5MoimLgskCw_SB5s9lju392aQeK8Omgq5zXQ1pHmb_H0NvQYcsVUM&usqp=CAU" class="character-img">
+  </div>
+
+  <!-- Botón debajo del sobre -->
+  <button class="heart-button" id="openButton" onclick="openMessage()">❤</button>
+
+  <!-- Mensaje -->
+  <div class="message-container" id="messageBox">
+    <div class="message-box">
+      <div class="mini-message">De tu cachetona Ivi</div>
+      <div class="full-message">
+        Mi amor, quiero que sepas cuánto te amo. Eres la razón de mis sonrisas y la calma de mis días. Cada momento a tu lado es un regalo y agradezco a la vida por haberte puesto en mi camino. <br><br>
+        Eres mi amor bonito, mi cómplice, y mi lugar seguro. Te amo más de lo que las palabras pueden decir. Me haces sentir especial, amada y feliz cada día. Gracias por ser tú, por tu paciencia, por tus abrazos, y por esas miradas que me derriten. Eres y serás siempre mi hogar. <br><br>
+        Te prometo que seguiré luchando por nosotros, porque vale la pena, porque tú vales todo. ¡Te amo infinito, mi vida!
+      </div>
+      <button class="close-button" onclick="closeMessage()">❤</button>
+    </div>
+  </div>
+
+  <!-- Mini video en esquina -->
+  <div id="videoContainer">
+    <video id="localVideo" muted autoplay controls loop playsinline>
+      <source src="video.mp4.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- Mensaje mágico -->
+  <div id="finalMessage">Tú y yo por siempre, mi Tomas 💖</div>
+
+  <script>
+    function openMessage() {
+      const envelope = document.getElementById('envelope');
+      const heartButton = document.getElementById('openButton');
+      const video = document.getElementById('localVideo');
+      const videoContainer = document.getElementById('videoContainer');
+
+      envelope.classList.add('opened');
+      heartButton.style.opacity = '0';
+
+      setTimeout(() => {
+        document.getElementById('messageBox').classList.add('active');
+        videoContainer.style.display = 'block';
+        video.muted = false;
+        video.play().catch(() => {});
+      }, 800);
+    }
+
+    function closeMessage() {
+      document.getElementById('messageBox').classList.remove('active');
+      document.getElementById('envelope').classList.remove('opened');
+      document.getElementById('openButton').style.opacity = '1';
+      document.getElementById('videoContainer').style.display = 'none';
+      const video = document.getElementById('localVideo');
+      video.pause();
+      video.currentTime = 0;
+
+      // Mostrar mensaje mágico
+      const finalMessage = document.getElementById('finalMessage');
+      finalMessage.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
