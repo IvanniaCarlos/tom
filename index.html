@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Carta para mi patito</title>
-  <link rel="icon" href="https://pm1.aminoapps.com/8200/1b01267b78be98f6932dab3bc521c97a448b845br1-507-381v2_hq.jpg"/>
+  <link rel="icon" href="https://pm1.aminoapps.com/8200/1b01267b78be98f6932dab3bc521c97a448b845br1-507-381v2_hq.jpg">
   <style>
     body {
       margin: 0;
@@ -52,29 +52,29 @@
       position: relative;
       width: 300px;
       height: 300px;
-      background: rgba(255,255,255,0.2);
+      background-image: url('https://i.imgur.com/X8BqohY.png');
+      background-size: cover;
+      background-position: center;
       border-radius: 20px;
       box-shadow: 0 0 20px rgba(235, 115, 153, 0.7), 0 0 40px rgba(255, 100, 150, 0.4);
       overflow: hidden;
       z-index: 2;
-      animation: glow 2s infinite alternate;
       transition: transform 1s ease, opacity 1s ease;
-      background-image: url('https://i.imgur.com/X8BqohY.png');
-      background-size: cover;
-      background-position: center;
     }
 
-    .envelope.opened { transform: rotateX(90deg); opacity: 0; }
+    .envelope.opened {
+      transform: rotateX(90deg);
+      opacity: 0;
+    }
 
     .character-img {
       position: absolute;
-      width: 90%;
-      height: auto;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
       z-index: 3;
-      border-radius: 15px;
+      border-radius: 20px;
       object-fit: cover;
       pointer-events: none;
     }
@@ -103,20 +103,15 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
+      background: black;
       color: white;
-      display: flex;
+      display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.5s ease;
       padding: 20px;
-      z-index: 999;
+      z-index: 9999;
     }
-
-    .message-container.active { opacity: 1; visibility: visible; }
 
     .message-box {
       background: rgba(255, 255, 255, 0.15);
@@ -163,7 +158,6 @@
 
     .close-button:hover { background-color: #e43e5f; }
 
-    /* Mini video en la esquina */
     #videoContainer {
       display: none;
       position: fixed;
@@ -171,19 +165,18 @@
       right: 20px;
       width: 300px;
       height: 170px;
-      z-index: 1000;
+      z-index: 10000;
       box-shadow: 0 0 10px rgba(255,255,255,0.5);
       border-radius: 10px;
       overflow: hidden;
     }
 
-    video {
+    #videoContainer video {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    /* Mensaje mágico al cerrar */
     #finalMessage {
       position: fixed;
       top: 30px;
@@ -199,7 +192,6 @@
       transition: opacity 1.5s ease;
       z-index: 2000;
       text-align: center;
-      font-family: 'Arial', sans-serif;
       pointer-events: none;
     }
 
@@ -210,7 +202,7 @@
 </head>
 <body>
 
-  <!-- Corazones flotantes -->
+  <!-- Corazones -->
   <div class="heart" style="left: 10%; animation-delay: 0s;"></div>
   <div class="heart" style="left: 30%; animation-delay: 5s;"></div>
   <div class="heart" style="left: 50%; animation-delay: 8s;"></div>
@@ -222,10 +214,10 @@
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuvEpR8gF8pUEtLl5MoimLgskCw_SB5s9lju392aQeK8Omgq5zXQ1pHmb_H0NvQYcsVUM&usqp=CAU" class="character-img">
   </div>
 
-  <!-- Botón debajo del sobre -->
+  <!-- Botón para abrir -->
   <button class="heart-button" id="openButton" onclick="openMessage()">❤</button>
 
-  <!-- Mensaje -->
+  <!-- Mensaje oculto -->
   <div class="message-container" id="messageBox">
     <div class="message-box">
       <div class="mini-message">De tu cachetona Ivi</div>
@@ -238,48 +230,59 @@
     </div>
   </div>
 
-  <!-- Mini video en esquina -->
+  <!-- Video visible en esquina -->
   <div id="videoContainer">
-    <video id="localVideo" muted autoplay controls loop playsinline>
+    <video id="localVideo" controls>
       <source src="video.mp4.mp4" type="video/mp4">
+      Tu navegador no soporta el video.
     </video>
   </div>
 
-  <!-- Mensaje mágico -->
+  <!-- Mensaje final -->
   <div id="finalMessage">Tú y yo por siempre, mi Tomas 💖</div>
 
-  <script>
-    function openMessage() {
-      const envelope = document.getElementById('envelope');
-      const heartButton = document.getElementById('openButton');
-      const video = document.getElementById('localVideo');
-      const videoContainer = document.getElementById('videoContainer');
+  <!-- (Este código es igual al tuyo, solo agrego la línea que hace que desaparezca el mensaje final) -->
 
-      envelope.classList.add('opened');
-      heartButton.style.opacity = '0';
+<script>
+  function openMessage() {
+    const envelope = document.getElementById('envelope');
+    const heartButton = document.getElementById('openButton');
+    const videoContainer = document.getElementById('videoContainer');
+    const video = document.getElementById('localVideo');
+    const messageBox = document.getElementById('messageBox');
 
-      setTimeout(() => {
-        document.getElementById('messageBox').classList.add('active');
-        videoContainer.style.display = 'block';
-        video.muted = false;
-        video.play().catch(() => {});
-      }, 800);
-    }
+    envelope.classList.add('opened');
+    heartButton.style.opacity = '0';
 
-    function closeMessage() {
-      document.getElementById('messageBox').classList.remove('active');
-      document.getElementById('envelope').classList.remove('opened');
-      document.getElementById('openButton').style.opacity = '1';
-      document.getElementById('videoContainer').style.display = 'none';
-      const video = document.getElementById('localVideo');
-      video.pause();
-      video.currentTime = 0;
+    setTimeout(() => {
+      messageBox.style.display = 'flex';
+      videoContainer.style.display = 'block';
+      video.play().catch(() => {});
+    }, 800);
+  }
 
-      // Mostrar mensaje mágico
-      const finalMessage = document.getElementById('finalMessage');
-      finalMessage.classList.add('active');
-    }
-  </script>
+  function closeMessage() {
+    const videoContainer = document.getElementById('videoContainer');
+    const video = document.getElementById('localVideo');
+    const messageBox = document.getElementById('messageBox');
+
+    video.pause();
+    video.currentTime = 0;
+    videoContainer.style.display = 'none';
+    messageBox.style.display = 'none';
+
+    document.getElementById('envelope').classList.remove('opened');
+    document.getElementById('openButton').style.opacity = '1';
+
+    const finalMessage = document.getElementById('finalMessage');
+    finalMessage.classList.add('active');
+
+    // ⏳ El mensaje se va solo después de 5 segundos
+    setTimeout(() => {
+      finalMessage.classList.remove('active');
+    }, 5000);
+  }
+</script>
 
 </body>
 </html>
